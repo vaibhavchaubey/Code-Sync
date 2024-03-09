@@ -2,8 +2,10 @@ import React from 'react'
 
 const Home = () => {
   return (
-    <div>
-      Home <Page></Page>
+    <div className='homePageWrapper'>
+      <div className='formWrapper'>
+        <img src="/code-sync.png" alt="code-sync-logo" />
+      </div>
     </div>
   )
 }
