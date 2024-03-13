@@ -1,27 +1,60 @@
 import express from 'express';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
+import ACTIONS from './src/Actions.js';
 
 const app = express();
 const server = createServer(app);
 
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+});
+
+const userSocketMap = {};
+
+function getAllConnectedCleints(roomId) {
+  // It is used to get an array of socket IDs belonging to a specific room (roomId) in the Socket.IO server
+  // after that we use map in order to get the socketId and username
+  return Array.from(io.sockets.adapter.rooms.get(roomId) || []).map(
+    (socketId) => {
+      return {
+        socketId,
+        username: userSocketMap[socketId],
+      };
+    }
+  );
+}
 
 /* Socket.io event handler for the 'connection' event, which is triggered whenever a new client connects */
 io.on('connection', (socket) => {
-    console.log('socket connected', socket.id)
-})
+  console.log('socket connected', socket.id);
 
+  socket.on(ACTIONS.JOIN, ({ roomId, username }) => {
+    userSocketMap[socket.id] = username;
+    socket.join(roomId);
 
+    const clients = getAllConnectedCleints(roomId);
+    clients.forEach(({ socketId }) => {
+      io.to(socketId).emit(ACTIONS.JOINED, {
+        clients,
+        username,
+        socketId: socket.id,
+      });
+    });
+  });
+});
 
-
-
-
-
+app.get('/', (req, res) => {
+  res.send('Home Page');
+  // console.log("connect")
+});
 
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
-  
+  console.log(`Server is running on port ${PORT}`);
+});

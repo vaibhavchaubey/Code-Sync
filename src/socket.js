@@ -8,5 +8,11 @@ export const initSocket = async () => {
     transports: ['websockets'],
   };
 
-  return io(import.meta.env.VITE_BACKEND_URL, options)
+  return io(import.meta.env.VITE_BACKEND_URL, {
+    withCredentials: true,
+  })
+  // return io(import.meta.env.VITE_BACKEND_URL, options)
+  // return io("http://localhost:5000", {
+  //   withCredentials: true,
+  // })
 };
