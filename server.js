@@ -46,6 +46,34 @@ io.on('connection', (socket) => {
       });
     });
   });
+
+  socket.on(ACTIONS.CODE_CHANGE, ({ roomId, code }) => {
+    socket.in(roomId).emit(ACTIONS.CODE_CHANGE, {
+      code,
+    });
+  });
+
+  socket.on(ACTIONS.SYNC_CODE, ({ socketId, code }) => {
+    io.to(socketId).emit(ACTIONS.CODE_CHANGE, {
+      code,
+    });
+  });
+
+  // Event when the perticular user leave the room and we have to notify this in that room
+  socket.on('disconnecting', () => {
+    // getting all the rooms of a user
+    const rooms = [...socket.rooms];
+    rooms.forEach((roomId) => {
+      // socket.to     (is also working)
+      socket.in(roomId).emit(ACTIONS.DISCONNECTED, {
+        socketId: socket.id,
+        username: userSocketMap[socket.id],
+      });
+    });
+
+    delete userSocketMap[socket.id];
+    socket.leave();
+  });
 });
 
 app.get('/', (req, res) => {
