@@ -1,6 +1,7 @@
 import express from 'express';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
+import path from 'path';
 import ACTIONS from './src/Actions.js';
 
 const app = express();
@@ -12,6 +13,14 @@ const io = new Server(server, {
     methods: ['GET', 'POST'],
     credentials: true,
   },
+});
+
+const PORT = process.env.PORT || 5000;
+const __dirname = path.resolve();
+
+app.use(express.static('dist'))
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
 });
 
 const userSocketMap = {};
@@ -76,7 +85,6 @@ io.on('connection', (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
