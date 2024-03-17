@@ -54,6 +54,10 @@ To run Code Sync locally, follow these steps:
 - MongoDB: NoSQL database for storing user information, code files, and version history. -->
 
 
+## Demonstration 🎥
+https://github.com/vaibhavchaubey/Code-Sync/assets/88048439/34b0fa19-ef0a-47f8-bd50-38e6e61750fd
+
+
 ## Contributing 🤝
 
 Contributions are welcome! Feel free to submit bug reports, feature requests, or pull requests. For major changes, please open an issue first to discuss the proposed changes.
