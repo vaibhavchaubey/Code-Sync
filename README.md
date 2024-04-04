@@ -44,7 +44,7 @@ To run Code Sync locally, follow these steps:
 
 ## Technologies Used 🛠️
 
-- React: Frontend user interface and components.
+- React.js: Frontend user interface and components.
 - Node.js: Backend server environment.
 - Express.js: Web framework for Node.js, used for routing and handling HTTP requests.
 - Socket.io: Real-time bidirectional communication library for web applications, used for implementing WebSocket functionality.
